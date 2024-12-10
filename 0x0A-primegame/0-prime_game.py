@@ -1,39 +1,37 @@
 
 #!/usr/bin/python3
-""" Prime Game Problem
-    Topic: Eratosthenes algorithm
 """
-
+Doc doc doc doc
+"""
 
 def isWinner(x, nums):
     """
-    Determines the winner in the prime game using
-    Eratosthenes prime sieving algorithm
+    Determine the Winner
+    Args:
+        x (int): Number
     """
-    Ben = 0
-    Maria = 0
+    if not nums or x < 1:
+        return
+    max_num = max(nums)
 
-    for round in range(x):
-        playing_numbers = [num for num in range(2, nums[round] + 1)]
-        index = 0
-        # Sieve prime numbers per round
-        while (index < len(playing_numbers)):
-            current_prime = playing_numbers[index]
-            sieve_index = index + current_prime
-            while(sieve_index < len(playing_numbers)):
-                playing_numbers.pop(sieve_index)
-                sieve_index += current_prime - 1
-            index += 1
-        # Determine winner - if number of primes is even player 1 wins
-        # else player 2 wins. Player 2  also wins if there is only one
-        # number to pick from
-        prime_count = (len(playing_numbers))
-        if prime_count and prime_count % 2:
-            Maria += 1
-        else:
-            Ben += 1
-
-    if Ben == Maria:
+    my_filter = [True for _ in range(max(max_num + 1, 2))]
+    for i in range(2, int(pow(max_num, 0.5)) + 1):
+        if not my_filter[i]:
+            continue
+        for j in range(i * i, max_num + 1, i):
+            my_filter[j] = False
+    my_filter[0] = my_filter[1] = False
+    y = 0
+    for i in range(len(my_filter)):
+        if my_filter[i]:
+            y += 1
+        my_filter[i] = y
+    player1 = 0
+    for x in nums:
+        player1 += my_filter[x] % 2 == 1
+    if player1 * 2 == len(nums):
         return None
-    return 'Ben' if Ben > Maria else 'Maria'
+    if player1 * 2 > len(nums):
+        return "Maria"
+    return "Ben"
 
